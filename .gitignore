@@ -1,0 +1,65 @@
+######################################
+# Maven / Java
+######################################
+target/
+*.log
+*.class
+
+######################################
+# Spring Boot
+######################################
+HELP.md
+
+######################################
+# Maven Wrapper
+######################################
+.mvn/wrapper/maven-wrapper.jar
+
+######################################
+# Eclipse / Spring Tool Suite (STS)
+######################################
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+######################################
+# IntelliJ IDEA
+######################################
+.idea/
+*.iws
+*.iml
+*.ipr
+
+######################################
+# VS Code
+######################################
+.vscode/
+
+######################################
+# NetBeans
+######################################
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+######################################
+# OS files
+######################################
+.DS_Store
+Thumbs.db
+
+######################################
+# Environment / Secrets
+######################################
+.env
+application.properties
+application.yml
+application-dev.properties
+application-prod.properties
