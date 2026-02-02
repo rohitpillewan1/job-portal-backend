@@ -56,6 +56,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleJobExsitence(JobNotFound ex){
     	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false,ex.getMessage()));
     }
+
+    @ExceptionHandler(UnauthenticatedUser.class)
+    public ResponseEntity<ApiResponse> handleUnAuthenticatedUser(UnauthenticatedUser ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false,ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleValidation(
             MethodArgumentNotValidException ex) {

@@ -3,6 +3,7 @@ import java.lang.invoke.StringConcatFactory;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 
+import lombok.Data;
 import org.hibernate.type.TrueFalseConverter;
 
 import com.rohit.job_protal.enums.Gender;
@@ -17,13 +18,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
+@Data
 @Entity
 public class UserProfile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;	
 	@OneToOne
-	@JoinColumn(name = "id",referencedColumnName = "id",nullable = false,unique = true)
+	@JoinColumn(name = "user_id",nullable = false,unique = true)
 	private User user;
 	@Enumerated(EnumType.STRING)
 	private Gender gender;

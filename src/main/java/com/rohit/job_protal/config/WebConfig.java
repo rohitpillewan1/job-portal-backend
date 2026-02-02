@@ -28,9 +28,10 @@ public class WebConfig {
 			.csrf(csrf->csrf.disable())
 			.sessionManagement(seesion->seesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth->auth
-					.requestMatchers("/api/auth/**").permitAll()
+					.requestMatchers("/api/auth/**").permitAll().requestMatchers("/temp/**").permitAll()
 					.requestMatchers("/api/admin/**").hasRole("ADMIN")
 					.requestMatchers("/api/job/**").hasRole("USER")
+							.requestMatchers("/api/user/**").permitAll()
 					.anyRequest().authenticated()
 					)
 			.addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);		
