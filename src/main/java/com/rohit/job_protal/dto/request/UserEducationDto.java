@@ -1,21 +1,21 @@
-package com.rohit.job_protal.entity;
+package com.rohit.job_protal.dto.request;
 
 import com.rohit.job_protal.enums.EducationStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
-public class UserEducation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne
-    @JoinColumn(name = "profile_id")
-    private UserProfile userProfile;
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserEducationDto {
+    @NotBlank(message = "degree should not be empty")
     private String degree;
     private Double percentage;
     private String institute;
@@ -23,6 +23,4 @@ public class UserEducation {
     private LocalDate endData;
     @Enumerated(EnumType.STRING)
     private EducationStatus educationStatus;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

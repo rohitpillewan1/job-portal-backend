@@ -3,6 +3,7 @@ package com.rohit.job_protal.dto.request;
 import com.rohit.job_protal.enums.Gender;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -17,7 +18,7 @@ public class UserProfileDto {
     private String state;
     @NotBlank(message = "Country is mandatory")
     private String country;
-    @NotBlank(message = "Total experience is mandatory")
-    @Min(value = 0, message = "Experience cannot be negative")
+    @NotNull(message = "Total experience is required")
+    @Min(value = 0, message = "Total experience must be 0 or greater")
     private Integer totalExperience;
 }
