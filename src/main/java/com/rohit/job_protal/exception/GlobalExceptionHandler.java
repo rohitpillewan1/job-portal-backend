@@ -56,10 +56,37 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleJobExsitence(JobNotFound ex){
     	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false,ex.getMessage()));
     }
+    @ExceptionHandler(UserResumeAlreadyPresent.class)
+    public ResponseEntity<ApiResponse> handleUserResume(UserResumeAlreadyPresent ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(false,ex.getMessage()));
+    }
+
+    @ExceptionHandler(EducationAlreadyPresent.class)
+    public ResponseEntity<ApiResponse> handleUserEducation(EducationAlreadyPresent ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(false,ex.getMessage()));
+    }
+    @ExceptionHandler(EndDateNotePresent.class)
+    public ResponseEntity<ApiResponse> handleEndDate(EndDateNotePresent ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(false,ex.getMessage()));
+    }
+    @ExceptionHandler(UserExperienceAlreadyPresent.class)
+    public ResponseEntity<ApiResponse> handleUserExperience(UserExperienceAlreadyPresent ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(false,ex.getMessage()));
+    }
 
     @ExceptionHandler(UnauthenticatedUser.class)
     public ResponseEntity<ApiResponse> handleUnAuthenticatedUser(UnauthenticatedUser ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false,ex.getMessage()));
+    }
+
+    @ExceptionHandler(UserProfileNotFound .class)
+    public ResponseEntity<ApiResponse> handleUserProfile(UserProfileNotFound ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false,ex.getMessage()));
+    }
+
+    @ExceptionHandler(UserProfileAlreadyPresent .class)
+    public ResponseEntity<ApiResponse> handleUserProfileAlreadyPresent(UserProfileAlreadyPresent ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(false,ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

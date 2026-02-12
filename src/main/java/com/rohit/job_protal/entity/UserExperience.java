@@ -1,5 +1,6 @@
 package com.rohit.job_protal.entity;
-
+import com.rohit.job_protal.enums.EmploymentStatus;
+import com.rohit.job_protal.enums.EmploymentType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -7,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Entity
@@ -20,10 +20,19 @@ public class UserExperience {
     @ManyToOne
     @JoinColumn(name = "profile_id")
     private UserProfile userProfile;
+    @Column(nullable = false)
     private String companyName;
+    @Column(nullable = false)
     private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EmploymentType employmentType;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EmploymentStatus employmentStatus;
+    @Column(nullable = false)
     private LocalDate startDate;
     private LocalDate endDate;
-
-    private Boolean currentCompany;
+    @Column(length = 1000)
+    private String description;
 }

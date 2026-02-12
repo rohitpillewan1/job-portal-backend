@@ -1,7 +1,6 @@
 package com.rohit.job_protal.dto.response;
 import java.util.ArrayList;
 import java.util.List;
-import com.rohit.job_protal.entity.JobSkill;
 import com.rohit.job_protal.enums.EmploymentType;
 import com.rohit.job_protal.enums.JobStatus;
 import lombok.Data;

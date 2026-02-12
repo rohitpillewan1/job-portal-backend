@@ -31,7 +31,7 @@ public class WebConfig {
 					.requestMatchers("/api/auth/**").permitAll().requestMatchers("/temp/**").permitAll()
 					.requestMatchers("/api/admin/**").hasRole("ADMIN")
 					.requestMatchers("/api/job/**").hasRole("USER")
-							.requestMatchers("/api/user/**").permitAll()
+							.requestMatchers("/api/user/**").hasRole("USER")
 					.anyRequest().authenticated()
 					)
 			.addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);		

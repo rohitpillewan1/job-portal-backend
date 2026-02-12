@@ -25,7 +25,7 @@ public class SkillController {
 	public ResponseEntity<SucessApiResponse<LinkedHashMap<String, Object>>> createSkill(@RequestBody @Valid SkillDTO skillDTO){
 		long skillId = skillService.createSkill(skillDTO);
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("id",skillId);
+         map.put("id",skillId);
         map.put("name",skillDTO.getName());
 		return ResponseEntity.ok().body(
 				new SucessApiResponse<>(true,"Skill create sucessfully",map)
