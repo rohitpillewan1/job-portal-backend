@@ -3,6 +3,7 @@ package com.rohit.job_protal.service;
 import java.util.*;
 import java.time.LocalDateTime;
 
+import com.rohit.job_protal.exception.SkillNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -71,7 +72,7 @@ public class JobServiceImp implements JobService {
         for (Long skillId : jobDto.getSkill()) {
 
             Skill skill = skillsRepository.findById(skillId)
-                    .orElseThrow(() -> new RuntimeException("Skill not found"));
+                    .orElseThrow(() -> new SkillNotFound("Skill not found"));
 
             JobSkill jobSkill = new JobSkill();
             jobSkill.setId(new JobSkillId(job.getId(), skill.getId()));

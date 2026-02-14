@@ -1,5 +1,7 @@
 package com.rohit.job_protal.controller;
 import com.rohit.job_protal.dto.request.UserProfileDto;
+import com.rohit.job_protal.dto.response.SucessApiResponse;
+import com.rohit.job_protal.dto.response.UserProfileResponseDto;
 import com.rohit.job_protal.entity.UserProfile;
 import com.rohit.job_protal.service.UserProfileService;
 import jakarta.validation.Valid;
@@ -17,19 +19,17 @@ public class UserProfileController {
     private UserProfileService userProfileService;
 
     @PostMapping("/basic")
-    public ResponseEntity<UserProfileDto> createBasicProfile(
+    public ResponseEntity<SucessApiResponse<UserProfileResponseDto>> createBasicProfile(
             @Valid @RequestBody UserProfileDto userProfileDto) {
-
         UserProfile savedProfile = userProfileService.saveUserProfile(userProfileDto);
-
-        UserProfileDto response = new UserProfileDto();
+        UserProfileResponseDto response = new UserProfileResponseDto();
+        response.setId(savedProfile.getId());
         response.setGender(savedProfile.getGender());
         response.setPhone(savedProfile.getPhone());
         response.setCity(savedProfile.getCity());
         response.setState(savedProfile.getState());
         response.setCountry(savedProfile.getCountry());
         response.setTotalExperience(savedProfile.getTotalExperience());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(new SucessApiResponse<>(true,"Profile created sucessfully",response));
     }
 }

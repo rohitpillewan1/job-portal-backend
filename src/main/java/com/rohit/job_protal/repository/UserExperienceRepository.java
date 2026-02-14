@@ -8,4 +8,9 @@ import java.time.LocalDate;
 
 public interface UserExperienceRepository extends JpaRepository<UserExperience,Long> {
     public boolean existsUserExperienceByCompanyNameAndStartDateAndRoleAndUserProfile(String companyName, LocalDate  startDate, String role, UserProfile userProfile);
+
+    UserExperience findUserExperienceByUserProfile(UserProfile userProfile);
+
+    Boolean existsUserExperienceByUserProfile(UserProfile userProfile);
+
 }

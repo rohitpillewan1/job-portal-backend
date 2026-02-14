@@ -26,6 +26,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse(false, ex.getMessage()));
     }
+    @ExceptionHandler(JobAlreadyApplied.class)
+    public ResponseEntity<ApiResponse> handleJobAlreadyApplied(
+            JobAlreadyApplied ex) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse(false, ex.getMessage()));
+    }
     
     @ExceptionHandler(DuplicateJobException.class)
     public ResponseEntity<ApiResponse> handleJobAlreadyExist(
@@ -40,6 +47,14 @@ public class GlobalExceptionHandler {
     		UserAlreadyExist ex) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiResponse(false, ex.getMessage()));
+    }
+
+    @ExceptionHandler(SkillNotFound.class)
+    public ResponseEntity<ApiResponse> handleSkillNotFound(
+            SkillNotFound ex) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ApiResponse(false, ex.getMessage()));
     }
    

@@ -34,8 +34,6 @@ public class UserProfile {
 	private String state;
 	private String country;
 	private Integer totalExperience;
-	@Enumerated(EnumType.STRING)
-	private ProfileStatus profileStatus;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 }

@@ -1,8 +1,11 @@
 package com.rohit.job_protal.service;
 
 import com.rohit.job_protal.dto.request.UserEducationDto;
-import com.rohit.job_protal.entity.UserEducation;
+import com.rohit.job_protal.dto.response.UserEducationResponseDto;
+
+import java.util.List;
 
 public interface UserEducationService {
-    public UserEducation saveUserEducation(UserEducationDto userEducationDto);
+    public UserEducationResponseDto saveUserEducation(UserEducationDto userEducationDto);
+    public List<UserEducationResponseDto> getAllUserEducation();
 }
