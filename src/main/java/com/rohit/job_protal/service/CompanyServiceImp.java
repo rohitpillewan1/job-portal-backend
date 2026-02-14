@@ -17,7 +17,7 @@ public class CompanyServiceImp implements CompanyService {
     private CompanyRepository companyRepository;
 
     @Override
-    public long createCompany(CompanyDetailsDTO dto) {
+    public Company createCompany(CompanyDetailsDTO dto) {
 
         if (companyRepository.existsByName(dto.getName())) {
             throw new CompanyAlreadyExistException(
@@ -33,7 +33,7 @@ public class CompanyServiceImp implements CompanyService {
         company.setCreatedAt(LocalDateTime.now());
         company.setUpdatedAt(LocalDateTime.now());
 
-        companyRepository.save(company);
-        return company.getId();
+        return companyRepository.save(company);
+
     }
 }

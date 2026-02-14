@@ -45,7 +45,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private boolean profileComplete = false;
     private boolean enabled = true;
 
     private LocalDateTime createdAt;

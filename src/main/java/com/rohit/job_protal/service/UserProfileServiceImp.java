@@ -36,8 +36,6 @@ public class UserProfileServiceImp implements UserProfileService {
         profile.setState(dto.getState());
         profile.setCountry(dto.getCountry());
         profile.setTotalExperience(dto.getTotalExperience());
-
-        profile.setProfileStatus(ProfileStatus.INCOMPLETE);
         profile.setCreatedAt(LocalDateTime.now());
         profile.setUpdatedAt(LocalDateTime.now());
 

@@ -3,7 +3,6 @@ package com.rohit.job_protal.controller;
 import com.rohit.job_protal.dto.request.UserSkillDto;
 import com.rohit.job_protal.dto.response.ApiResponse;
 import com.rohit.job_protal.dto.response.UserSkillDtoReponse;
-import com.rohit.job_protal.entity.UserSkill;
 import com.rohit.job_protal.service.UserSkillService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

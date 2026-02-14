@@ -19,4 +19,6 @@ public interface UserSkillRepository extends JpaRepository<UserSkill, UserSkillI
     Boolean existsUserSkillBySkillAndUserProfile(Skill skill, UserProfile userProfile);
 
     List<UserSkill> findUserSkillByUserProfile(UserProfile userProfile);
+
+    Boolean existsUserSkillByUserProfile(UserProfile userProfile);
 }
