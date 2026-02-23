@@ -23,7 +23,7 @@ public class WebConfig {
 	@Autowired
 	private JwtAuthFilter jwtAuthFilter;
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
 			.csrf(csrf->csrf.disable())
 			.sessionManagement(seesion->seesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -40,7 +40,7 @@ public class WebConfig {
 	}
 	
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 	

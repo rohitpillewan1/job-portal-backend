@@ -2,6 +2,7 @@ package com.rohit.job_protal.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -56,6 +57,28 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ApiResponse(false, ex.getMessage()));
+    }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse> handleNotFoundException(
+            NotFoundException ex) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiResponse(false, ex.getMessage()));
+    }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<ApiResponse> handleUnAuthorizedException(
+            UnAuthorizedException ex) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse(false, ex.getMessage()));
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse> handleBadCredential(
+            BadCredentialsException ex) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
+                .body(new ApiResponse(false, "Invalid Username or Password"));
     }
    
 

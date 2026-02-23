@@ -29,7 +29,8 @@ public class UserEducationDto {
     @NotNull(message = "Start date is required")
     @PastOrPresent(message = "Start date cannot be in the future")
     private LocalDate startDate;
-
+    @NotNull(message = "End date is required")
+//    @FutureOrPresent(message = "End date can not be before start date")
     private LocalDate endDate;
 
     @NotNull(message = "Education status is required")

@@ -4,10 +4,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.rohit.job_protal.enums.EducationStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @JsonPropertyOrder({
         "id",

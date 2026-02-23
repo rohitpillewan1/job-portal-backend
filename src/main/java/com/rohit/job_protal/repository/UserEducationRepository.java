@@ -16,5 +16,11 @@ public interface UserEducationRepository extends JpaRepository<UserEducation,Lon
 
     Boolean existsUserEducationByUserProfile(UserProfile userProfile);
 
+    Boolean existsUserEducationByUserProfileAndId(UserProfile userProfile, Long id);
+
     List<UserEducation> findAllByUserProfile(UserProfile userProfile);
+
+    UserEducation findUserEducationByUserProfileAndId(UserProfile userProfile, Long id);
+
+    void deleteUserEducationByUserProfileAndId(UserProfile userProfile, Long id);
 }

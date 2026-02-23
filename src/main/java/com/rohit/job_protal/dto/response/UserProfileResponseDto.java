@@ -22,4 +22,5 @@ public class UserProfileResponseDto {
     private String state;
     private String country;
     private Integer totalExperience;
+    private Long profileStausPercentage;
 }

@@ -5,20 +5,20 @@ import com.rohit.job_protal.dto.response.UserEducationResponseDto;
 import com.rohit.job_protal.entity.User;
 import com.rohit.job_protal.entity.UserEducation;
 import com.rohit.job_protal.entity.UserProfile;
-import com.rohit.job_protal.exception.EducationAlreadyPresent;
-import com.rohit.job_protal.exception.EndDateNotePresent;
-import com.rohit.job_protal.exception.UserProfileNotFound;
+import com.rohit.job_protal.exception.*;
 import com.rohit.job_protal.repository.UserEducationRepository;
 import com.rohit.job_protal.repository.UserProfileRepository;
 import com.rohit.job_protal.security.SecurityUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserEducationServiceImp implements UserEducationService{
+public class UserEducationServiceImp implements UserEducationService {
 
     @Autowired
     private UserEducationRepository userEducationRepository;
@@ -28,60 +28,145 @@ public class UserEducationServiceImp implements UserEducationService{
 
     @Autowired
     private SecurityUtil securityUtil;
+
+    // ================= SAVE =================
+
     @Override
-    public UserEducationResponseDto saveUserEducation(UserEducationDto userEducationDto) {
-        User user = securityUtil.getCurrentUser();
-        UserProfile userProfile = userProfileRepository.findByUser(user);
-        if(userProfile==null){
-            throw  new UserProfileNotFound("User profile not found first create user profile");
+    public UserEducationResponseDto saveUserEducation(UserEducationDto dto) {
+
+        UserProfile userProfile = getCurrentUserProfile();
+        validateDates(dto);
+
+        if (userEducationRepository
+                .existsByUserProfileAndDegreeAndInstituteAndStartDate(
+                        userProfile,
+                        dto.getDegree(),
+                        dto.getInstitute(),
+                        dto.getStartDate())) {
+
+            throw new EducationAlreadyPresent(
+                    "Education already present. Add education with another degree");
         }
-        if(userEducationRepository.existsByUserProfileAndDegreeAndInstituteAndStartDate(userProfile,userEducationDto.getDegree(),userEducationDto.getInstitute(),userEducationDto.getStartDate())){
-            throw new EducationAlreadyPresent("Education Already present Add education with another degree ");
-        }
-        if(userEducationDto.getStartDate().isAfter(userEducationDto.getEndDate())){
-            throw new EndDateNotePresent("End date cannot be before start date");
-        }
+
         UserEducation userEducation = new UserEducation();
         userEducation.setUserProfile(userProfile);
-        userEducation.setDegree(userEducationDto.getDegree());
-        userEducation.setInstitute(userEducationDto.getInstitute());
-        userEducation.setPercentage(userEducationDto.getPercentage());
-        userEducation.setStartDate(userEducationDto.getStartDate());
-        userEducation.setEndData(userEducationDto.getEndDate());
+        userEducation.setEducationStatus(dto.getEducationStatus());
+        userEducation.setDegree(dto.getDegree());
+        userEducation.setInstitute(dto.getInstitute());
+        userEducation.setPercentage(dto.getPercentage());
+        userEducation.setStartDate(dto.getStartDate());
+        userEducation.setEndData(dto.getEndDate());
         userEducation.setCreatedAt(LocalDateTime.now());
         userEducation.setUpdatedAt(LocalDateTime.now());
-       UserEducation userEducation1 =  userEducationRepository.save(userEducation);
 
-        UserEducationResponseDto userEducationRes = new UserEducationResponseDto();
-        userEducationRes.setId(userEducation1.getId());
-        userEducationRes.setDegree(userEducation1.getDegree());
-        userEducationRes.setEducationStatus(userEducation1.getEducationStatus());
-        userEducationRes.setInstitute(userEducation1.getInstitute());
-        userEducationRes.setStartDate(userEducation1.getStartDate());
-        userEducationRes.setEndDate(userEducation1.getEndData());
-        userEducationRes.setPercentage(userEducation1.getPercentage());
+        UserEducation savedEducation = userEducationRepository.save(userEducation);
 
-        return userEducationRes;
+        return mapToResponse(savedEducation);
     }
+
+    // ================= GET ALL =================
 
     @Override
     public List<UserEducationResponseDto> getAllUserEducation() {
 
-        User user = securityUtil.getCurrentUser();
-        UserProfile userProfile= userProfileRepository.findByUser(user);
-        List<UserEducation> userEducations  = userEducationRepository.findAllByUserProfile(userProfile);
-        List<UserEducationResponseDto> userEducationResponseDtos = new ArrayList<>();
-        for(UserEducation userEducation : userEducations ){
-            UserEducationResponseDto userEducationRes = new UserEducationResponseDto();
-            userEducationRes.setId(userEducation.getId());
-            userEducationRes.setDegree(userEducation.getDegree());
-            userEducationRes.setEducationStatus(userEducation.getEducationStatus());
-            userEducationRes.setInstitute(userEducation.getInstitute());
-            userEducationRes.setStartDate(userEducation.getStartDate());
-            userEducationRes.setEndDate(userEducation.getEndData());
-            userEducationRes.setPercentage(userEducation.getPercentage());
-            userEducationResponseDtos.add(userEducationRes);
+        UserProfile userProfile = getCurrentUserProfile();
+
+        List<UserEducation> educations =
+                userEducationRepository.findAllByUserProfile(userProfile);
+
+        List<UserEducationResponseDto> responseList = new ArrayList<>();
+
+        for (UserEducation education : educations) {
+            responseList.add(mapToResponse(education));
         }
-        return  userEducationResponseDtos;
+
+        return responseList;
+    }
+
+    // ================= UPDATE =================
+
+    @Override
+    public UserEducationResponseDto updateUserEducation(Long id, UserEducationDto dto) {
+
+        UserProfile userProfile = getCurrentUserProfile();
+        validateDates(dto);
+
+        if (userEducationRepository
+                .existsByUserProfileAndDegreeAndInstituteAndStartDate(
+                        userProfile,
+                        dto.getDegree(),
+                        dto.getInstitute(),
+                        dto.getStartDate())) {
+
+            throw new EducationAlreadyPresent(
+                    "Education already present. Add education with another degree");
+        }
+
+        UserEducation userEducation =
+                userEducationRepository.findUserEducationByUserProfileAndId(userProfile, id);
+
+        if (userEducation == null) {
+            throw new NotFoundException("Education not found");
+        }
+
+        userEducation.setEducationStatus(dto.getEducationStatus());
+        userEducation.setInstitute(dto.getInstitute());
+        userEducation.setDegree(dto.getDegree());
+        userEducation.setStartDate(dto.getStartDate());
+        userEducation.setEndData(dto.getEndDate());
+        userEducation.setPercentage(dto.getPercentage());
+        userEducation.setUpdatedAt(LocalDateTime.now());
+
+        userEducationRepository.save(userEducation);
+
+        return mapToResponse(userEducation);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUserEducation(long id) {
+        UserProfile userProfile = getCurrentUserProfile();
+        if(!userEducationRepository.existsUserEducationByUserProfileAndId(userProfile,id)){
+            throw new NotFoundException("User education not found");
+        }
+        userEducationRepository.deleteUserEducationByUserProfileAndId(userProfile,id);
+    }
+
+
+    // ================= HELPER METHODS =================
+
+    private UserProfile getCurrentUserProfile() {
+
+        User user = securityUtil.getCurrentUser();
+        UserProfile userProfile = userProfileRepository.findByUser(user);
+
+        if (userProfile == null) {
+            throw new UserProfileNotFound(
+                    "User profile not found. First create user profile.");
+        }
+
+        return userProfile;
+    }
+
+    private void validateDates(UserEducationDto dto) {
+
+        if (dto.getStartDate().isAfter(dto.getEndDate())) {
+            throw new EndDateNotePresent(
+                    "End date cannot be before start date");
+        }
+    }
+
+    private UserEducationResponseDto mapToResponse(UserEducation education) {
+
+        UserEducationResponseDto response = new UserEducationResponseDto();
+        response.setId(education.getId());
+        response.setDegree(education.getDegree());
+        response.setEducationStatus(education.getEducationStatus());
+        response.setInstitute(education.getInstitute());
+        response.setStartDate(education.getStartDate());
+        response.setEndDate(education.getEndData());
+        response.setPercentage(education.getPercentage());
+
+        return response;
     }
 }

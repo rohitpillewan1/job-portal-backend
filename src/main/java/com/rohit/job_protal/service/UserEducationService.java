@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserEducationService {
     public UserEducationResponseDto saveUserEducation(UserEducationDto userEducationDto);
     public List<UserEducationResponseDto> getAllUserEducation();
+    public UserEducationResponseDto updateUserEducation(Long id,UserEducationDto userEducationDto);
+    public void deleteUserEducation(long id);
 }

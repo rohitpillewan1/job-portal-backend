@@ -19,12 +19,24 @@ public class UserEducationController {
     @PostMapping("/education")
     public ResponseEntity<SucessApiResponse<UserEducationResponseDto>> saveUserEducation(@RequestBody @Valid UserEducationDto userEducationDto){
        UserEducationResponseDto userEducationResponseDto =  userEducationService.saveUserEducation(userEducationDto);
-         return  ResponseEntity.ok().body(new SucessApiResponse<>(true,"Education updated sucessfully",userEducationResponseDto));
+         return  ResponseEntity.ok().body(new SucessApiResponse<>(true,"Education updated successfully",userEducationResponseDto));
     }
 
     @GetMapping("/education")
-    public ResponseEntity<List<UserEducationResponseDto>> getAllUserDetails(){
+    public ResponseEntity<SucessApiResponse<List<UserEducationResponseDto>>> getAllUserDetails(){
         List<UserEducationResponseDto> userEducationResponseDtos = userEducationService.getAllUserEducation();
-        return ResponseEntity.ok().body(userEducationResponseDtos);
+        return ResponseEntity.ok().body(new SucessApiResponse<>(true,"Fetch All user education",userEducationResponseDtos));
+    }
+
+    @PutMapping("/education/{id}")
+    public ResponseEntity<SucessApiResponse<UserEducationResponseDto>> updateEducation(@PathVariable("id") Long id ,@RequestBody @Valid UserEducationDto userEducationDto){
+            UserEducationResponseDto userEducationResponseDto = userEducationService.updateUserEducation(id,userEducationDto);
+            return ResponseEntity.ok().body(new SucessApiResponse<>(true,"User education successfully updated",userEducationResponseDto));
+    }
+
+    @DeleteMapping("/education/{id}")
+    public ResponseEntity<ApiResponse> deleteUserEducation(@PathVariable("id") Long id){
+        userEducationService.deleteUserEducation(id);
+        return ResponseEntity.ok().body(new ApiResponse(true,"User delted sucessfully"));
     }
 }

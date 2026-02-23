@@ -7,6 +7,7 @@ import com.rohit.job_protal.entity.UserProfile;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile,Long> {

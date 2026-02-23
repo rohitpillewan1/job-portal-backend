@@ -1,9 +1,10 @@
 package com.rohit.job_protal.service;
 
 import com.rohit.job_protal.dto.request.UserProfileDto;
+import com.rohit.job_protal.dto.response.UserProfileResponseDto;
 import com.rohit.job_protal.entity.User;
 import com.rohit.job_protal.entity.UserProfile;
-import com.rohit.job_protal.enums.ProfileStatus;
+import com.rohit.job_protal.exception.NotFoundException;
 import com.rohit.job_protal.exception.UserExperienceAlreadyPresent;
 import com.rohit.job_protal.repository.UserProfileRepository;
 import com.rohit.job_protal.security.SecurityUtil;
@@ -19,10 +20,13 @@ public class UserProfileServiceImp implements UserProfileService {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
-    @Override
-    public UserProfile saveUserProfile(UserProfileDto dto) {
+    @Autowired
+    private ProfileStatusService profileStatusService;
 
-        User currentUser = securityUtil.getCurrentUser();
+    @Override
+    public UserProfileResponseDto saveUserProfile(UserProfileDto dto) {
+
+        User currentUser = getCurrentUser();
 
         if (userProfileRepository.existsByUser(currentUser)) {
             throw new UserExperienceAlreadyPresent("User profile already exists");
@@ -39,7 +43,38 @@ public class UserProfileServiceImp implements UserProfileService {
         profile.setCreatedAt(LocalDateTime.now());
         profile.setUpdatedAt(LocalDateTime.now());
 
-        return userProfileRepository.save(profile);
+       UserProfile userProfile = userProfileRepository.save(profile);
+       return mapToReponse(userProfile);
+    }
+
+    @Override
+    public UserProfileResponseDto getUserProfile() {
+        User currentUser = getCurrentUser();
+        if(!userProfileRepository.existsByUser(currentUser)){
+            throw new NotFoundException("User Profile Not Found first create user profile");
+        }
+        UserProfile userProfile = userProfileRepository.findUserProfileByUser(currentUser);
+        return mapToReponse(userProfile);
+    }
+
+
+
+    public User getCurrentUser(){
+        return securityUtil.getCurrentUser();
+    }
+
+    public UserProfileResponseDto mapToReponse(UserProfile userProfile){
+        UserProfileResponseDto response = new UserProfileResponseDto();
+        response.setId(userProfile.getId());
+        response.setGender(userProfile.getGender());
+        response.setPhone(userProfile.getPhone());
+        response.setCity(userProfile.getCity());
+        response.setState(userProfile.getState());
+        response.setCountry(userProfile.getCountry());
+        response.setTotalExperience(userProfile.getTotalExperience());
+        response.setProfileStausPercentage(profileStatusService.getProfileStatusPercenatage());
+
+        return response;
     }
 }
 
