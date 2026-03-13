@@ -3,20 +3,13 @@ import java.lang.invoke.StringConcatFactory;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.type.TrueFalseConverter;
 
 import com.rohit.job_protal.enums.Gender;
 import com.rohit.job_protal.enums.ProfileStatus;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Data
 @Entity
@@ -30,6 +23,7 @@ public class UserProfile {
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 	private String phone;
+	private boolean phoneVerified;
 	private String city;
 	private String state;
 	private String country;

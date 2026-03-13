@@ -22,9 +22,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserRepository userRepository;
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
@@ -34,17 +35,33 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = header.substring(7);
-        String userEmail = jwtAuthUtil.getUserEmail(token);
+        try {
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with "+userEmail));
+            String token = header.substring(7);
+            String userEmail = jwtAuthUtil.getUserEmail(token);
 
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                User user = userRepository.findByEmail(userEmail)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+
+        } catch (Exception e) {
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("""
+                {
+                  "success": false,
+                  "message": "Invalid or expired token"
+                }
+                """);
+            return;
         }
 
         filterChain.doFilter(request, response);

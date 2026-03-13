@@ -3,6 +3,7 @@ package com.rohit.job_protal.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.rohit.job_protal.dto.response.PageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +28,7 @@ public class JobListingController {
 	private JobService jobService;
 	
 	@GetMapping("/job-listing")
-	public ResponseEntity<Page<JobListingDTO>> getJobs(
+	public ResponseEntity<PageResponse<JobListingDTO>> getJobs(
 	        @RequestBody(required = false) JobFilterDto filterDTO,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size

@@ -22,6 +22,7 @@ public interface UserResumeRepository extends JpaRepository<UserResume, Long> {
     void deactivateActive(@Param("profileId") Long profileId);
 
     UserResume findUserResumeByUserProfile(UserProfile userProfile);
+    UserResume findByUserProfileAndActiveTrue(UserProfile userProfile);
     Boolean existsUserResumeByFileNameAndUserProfile(String fileName, UserProfile userProfile);
 }
 

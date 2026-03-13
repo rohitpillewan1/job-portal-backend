@@ -5,6 +5,7 @@ import com.rohit.job_protal.dto.response.UserProfileResponseDto;
 import com.rohit.job_protal.entity.User;
 import com.rohit.job_protal.entity.UserProfile;
 import com.rohit.job_protal.exception.NotFoundException;
+import com.rohit.job_protal.exception.UserAlreadyExist;
 import com.rohit.job_protal.exception.UserExperienceAlreadyPresent;
 import com.rohit.job_protal.repository.UserProfileRepository;
 import com.rohit.job_protal.security.SecurityUtil;
@@ -26,6 +27,10 @@ public class UserProfileServiceImp implements UserProfileService {
     @Override
     public UserProfileResponseDto saveUserProfile(UserProfileDto dto) {
 
+        if(userProfileRepository.existsByPhone(dto.getPhone())){
+            throw new UserAlreadyExist("Phone number already register");
+        }
+
         User currentUser = getCurrentUser();
 
         if (userProfileRepository.existsByUser(currentUser)) {
@@ -36,6 +41,7 @@ public class UserProfileServiceImp implements UserProfileService {
         profile.setUser(currentUser);
         profile.setGender(dto.getGender());
         profile.setPhone(dto.getPhone());
+        profile.setPhoneVerified(false);
         profile.setCity(dto.getCity());
         profile.setState(dto.getState());
         profile.setCountry(dto.getCountry());
@@ -69,6 +75,7 @@ public class UserProfileServiceImp implements UserProfileService {
         response.setGender(userProfile.getGender());
         response.setPhone(userProfile.getPhone());
         response.setCity(userProfile.getCity());
+        response.setPhoneVerified(userProfile.isPhoneVerified());
         response.setState(userProfile.getState());
         response.setCountry(userProfile.getCountry());
         response.setTotalExperience(userProfile.getTotalExperience());

@@ -3,6 +3,7 @@ package com.rohit.job_protal.entity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ import lombok.Data;
 @Entity
 @Table(name = "users")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class User implements UserDetails {
 
     @Id
@@ -45,7 +47,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

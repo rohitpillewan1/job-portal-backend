@@ -33,13 +33,13 @@ public class JwtAuthUtil {
                 .claim("userId", user.getId())
                 .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + (10 * 60 * 1000)))
+                .setExpiration(new Date(System.currentTimeMillis() + (1440 * 60 * 1000)))
                 .signWith(getSecretKey())
                 .compact();
     }
     
     public String getUserEmail(String token) {
-    	try{
+
     		Claims claims = Jwts.parser()
     				.verifyWith(getSecretKey())
     				.build()
@@ -47,11 +47,6 @@ public class JwtAuthUtil {
     				.getPayload();
         	String role = claims.get("role",String.class);
     		return claims.getSubject();
-    	}catch (ExpiredJwtException e) {
-    		 log.warn("JWT expired");
-		}catch(JwtException e) {
-			 log.warn("JWT expired");
-		}
-    	return null;
+
     }
 }

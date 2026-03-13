@@ -8,6 +8,7 @@ import lombok.Data;
         "id",
         "gender",
         "phone",
+        "phoneVerified",
         "city",
         "state",
         "country",
@@ -18,6 +19,7 @@ public class UserProfileResponseDto {
     private Long id;
     private Gender gender;
     private String phone;
+    private boolean phoneVerified;
     private String city;
     private String state;
     private String country;

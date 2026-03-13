@@ -1,5 +1,6 @@
 package com.rohit.job_protal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rohit.job_protal.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class JobApplication {
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id",nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Job job;
     private LocalDateTime appliedAt;
     @Enumerated(EnumType.STRING)
