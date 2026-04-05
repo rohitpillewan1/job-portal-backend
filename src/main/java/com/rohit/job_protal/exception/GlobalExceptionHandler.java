@@ -157,6 +157,12 @@ public class GlobalExceptionHandler {
                 .body(new ApiResponse(false, "Invalid Username or Password"));
     }
 
+    @ExceptionHandler(InvalidOtp.class)
+    public ResponseEntity<ApiResponse> handleInvalidOtp(InvalidOtp ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse(false,ex.getMessage()));
+    }
+
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<ApiResponse> handleDisabledException(DisabledException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

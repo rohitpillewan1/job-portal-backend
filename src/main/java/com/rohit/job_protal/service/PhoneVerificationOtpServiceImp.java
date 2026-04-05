@@ -1,5 +1,6 @@
 package com.rohit.job_protal.service;
 
+import com.rohit.job_protal.config.TwilioConfig;
 import com.rohit.job_protal.entity.PhoneVerificationOtp;
 import com.rohit.job_protal.entity.User;
 import com.rohit.job_protal.entity.UserProfile;
@@ -7,7 +8,11 @@ import com.rohit.job_protal.exception.*;
 import com.rohit.job_protal.repository.PhoneVerificationOtpRepository;
 import com.rohit.job_protal.repository.UserProfileRepository;
 import com.rohit.job_protal.security.SecurityUtil;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.Mergeable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +35,9 @@ public class PhoneVerificationOtpServiceImp implements PhoneVerificationOtpServi
     @Autowired
     private PhoneVerificationOtpRepository phoneVerificationOtpRepository;
 
+    @Autowired
+    private TwilioConfig twilioConfig;
+
 
     @Transactional
     @Override
@@ -43,6 +51,9 @@ public class PhoneVerificationOtpServiceImp implements PhoneVerificationOtpServi
 
        if(optionalOtp.isPresent()){
            PhoneVerificationOtp phoneVerification = optionalOtp.get();
+           if(phoneVerification.getExpiryDate().isAfter(LocalDateTime.now())){
+               throw new NotFoundException("Try after 5 minutes");
+           }
            if(phoneVerification.isUsed()){
                throw new TokenIsUsed("Phone Number is already verify");
            }
@@ -59,6 +70,8 @@ public class PhoneVerificationOtpServiceImp implements PhoneVerificationOtpServi
         phoneVerificationOtp.setExpiryDate(LocalDateTime.now().plusMinutes(5));
         System.out.println(otp);
         phoneVerificationOtpRepository.save(phoneVerificationOtp);
+        sendOtp(phoneVerificationOtp,otp);
+
     }
 
     @Override
@@ -84,6 +97,23 @@ public class PhoneVerificationOtpServiceImp implements PhoneVerificationOtpServi
        userProfileRepository.save(userProfile);
        phoneVerificationOtpRepository.save(phoneVerificationOtp);
 
+    }
+
+    @Transactional
+    @Override
+    public void sendOtp(PhoneVerificationOtp phoneVerificationOtp,String otp) {
+        String toPhoneNumber="+91"+phoneVerificationOtp.getUserProfile().getPhone();
+        Twilio.init(
+                twilioConfig.getAccountSid(),
+                twilioConfig.getAuthToken()
+        );
+        Message.creator(
+                new PhoneNumber(toPhoneNumber),
+                new PhoneNumber(twilioConfig.getPhoneNumber()),
+                "Your OTP for phone verification on Jobby is: "+otp+"\n\n"+
+                        "This OTP is valid for 5 minutes. Do not share it with anyone."
+        ).create();
+        System.out.println(otp);
     }
 
     public UserProfile getUserProfile(){

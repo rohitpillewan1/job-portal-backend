@@ -11,7 +11,7 @@ import com.rohit.job_protal.dto.response.LoginUserResponseDto;
 import com.rohit.job_protal.security.AuthService;
 import jakarta.validation.Valid;
 
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {		
